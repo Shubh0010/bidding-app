@@ -23,6 +23,7 @@ router.get('/', async (req, res) => {
       });
 
       result.push({
+        _id: team._id,
         name: team.name,
         capitan: team.capitan,
         remaining_budget: team.remaining_budget,
