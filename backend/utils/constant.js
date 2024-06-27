@@ -1,0 +1,30 @@
+const RESPONSE_STATUS = {
+  SUCCESS: 'success',
+  FAILURE: 'failure'
+}
+
+const MESSAGES = {
+  ERROR_CONSOLE_LOG_SERVICE: ' ::::::: ERROR FROM SERVICE ::::::: ',
+  ERROR_CONSOLE_LOG_CONTROLLER: ' ::::::: ERROR FROM CONTROLLER ::::::: ',
+}
+
+const POTS_AVAILABLE = {
+  POT_A: 'A',
+  POT_B: 'B'
+}
+
+const MAX_POT_PLAYERS_COUNT = 3;
+
+const BID_STATUS = {
+  PENDING: 0,
+  SOLD: 1,
+  UNSOLD: -1
+}
+
+module.exports = {
+  RESPONSE_STATUS,
+  MESSAGES,
+  POTS_AVAILABLE,
+  MAX_POT_PLAYERS_COUNT,
+  BID_STATUS,
+}
