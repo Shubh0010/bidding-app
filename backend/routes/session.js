@@ -1,12 +1,93 @@
 const { Router } = require('express');
+const { Player, Session } = require('../database/mongo');
+const { sendErrorResponse, sendSuccessResponse } = require('../utils/responses');
+const { MESSAGES } = require('../utils/constant');
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 
+  try {
+
+    const existingSession = await Session.findOne({
+      status: 'active'
+    });
+
+    if (!existingSession) {
+      return sendSuccessResponse(res, {});
+    }
+
+    const [playerDetails] = await Player.find({
+      _id: {
+        "$in": existingSession.player
+      }
+    });
+
+    return sendSuccessResponse(res, {
+      _id: existingSession._id,
+      player: playerDetails,
+      current_bid: existingSession.currentBid,
+      biddingTeamId: existingSession.biddingTeamId,
+      status: existingSession.status
+    });
+
+  } catch (error) {
+    console.error(MESSAGES.ERROR_CONSOLE_LOG_CONTROLLER + 'get session:');
+    console.error(error.message);
+
+    sendErrorResponse(res, error.message);
+  }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+
+  try {
+
+    const existingSession = await Session.findOne({
+      status: 'active'
+    });
+
+    if (existingSession) {
+
+      const [playerDetails] = await Player.find({
+        _id: {
+          "$in": existingSession.player
+        }
+      });
+  
+      return sendSuccessResponse(res, {
+        _id: existingSession._id,
+        player: playerDetails,
+        current_bid: existingSession.currentBid,
+        biddingTeamId: existingSession.biddingTeamId,
+        status: existingSession.status
+      });
+    }
+
+    const nextPlayer = await Player.findOne({
+      status: 'pending',
+    });
+
+    const session = await Session.create({
+      player: nextPlayer._id,
+      currentBid: 0,
+      status: 'active'
+    });
+    
+    return sendSuccessResponse(res, {
+      _id: session._id,
+      player: nextPlayer,
+      current_bid: session.currentBid,
+      biddingTeamId: session.biddingTeamId,
+      status: session.status
+    });
+
+  } catch (error) {
+    console.error(MESSAGES.ERROR_CONSOLE_LOG_CONTROLLER + 'create session:');
+    console.error(error.message);
+
+    sendErrorResponse(res, error.message);
+  }
 
 });
 
