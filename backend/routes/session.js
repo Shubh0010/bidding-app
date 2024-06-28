@@ -68,6 +68,8 @@ router.post('/', async (req, res) => {
       status: 'pending',
     });
 
+    if (!nextPlayer) return sendSuccessResponse(res, {});
+
     const session = await Session.create({
       player: nextPlayer._id,
       currentBid: 0,

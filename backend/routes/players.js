@@ -6,6 +6,7 @@ const { MESSAGES } = require('../utils/constant');
 const router = Router();
 
 router.get('/', async (req, res) => {
+
   try {
 
     const {s: status} = req.query;
