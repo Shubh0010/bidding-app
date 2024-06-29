@@ -40,21 +40,18 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-
   try {
-
-    const existingSession = await Session.findOne({
-      status: 'active'
-    });
+    
+    const existingSession = await Session.findOne({ status: 'active' }).lean();
 
     if (existingSession) {
 
-      const [playerDetails] = await Player.find({
-        _id: {
-          "$in": existingSession.player
-        }
-      });
-  
+      const playerDetails = await Player.findById(existingSession.player).lean();
+      
+      if (!playerDetails) {
+        throw new Error('Player not found for active session');
+      }
+
       return sendSuccessResponse(res, {
         _id: existingSession._id,
         player: playerDetails,
@@ -64,9 +61,11 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const nextPlayer = await Player.findOne({
-      status: 'pending',
-    });
+    const nextPlayer = await Player.findOneAndUpdate(
+      { status: 'pending' },
+      { $set: { status: 'active' } },
+      { new: true, lean: true }
+    );
 
     if (!nextPlayer) return sendSuccessResponse(res, {});
 
@@ -85,12 +84,9 @@ router.post('/', async (req, res) => {
     });
 
   } catch (error) {
-    console.error(MESSAGES.ERROR_CONSOLE_LOG_CONTROLLER + 'create session:');
-    console.error(error.message);
-
+    console.error(MESSAGES.ERROR_CONSOLE_LOG_CONTROLLER + 'create session:', error.message);
     sendErrorResponse(res, error.message);
   }
-
 });
 
 module.exports = router;

@@ -1,12 +1,11 @@
 const { Router } = require('express');
-const { Team, Player } = require('../database/mongo');
+const { Team } = require('../database/mongo');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responses');
 const { MESSAGES } = require('../utils/constant');
 
 const router = Router();
 
 const TOTAL_PLAYERS = 5;
-const TOTAL_BUDGET = 100;
 
 router.get('/', async (req, res) => {
 
