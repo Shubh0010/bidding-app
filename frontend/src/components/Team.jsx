@@ -1,6 +1,6 @@
 import Bid from "./Bid"
 
-const Team = ({ type, team, session }) => {
+const Team = ({ type, team }) => {
 
   return (
     <div
@@ -8,7 +8,7 @@ const Team = ({ type, team, session }) => {
         'my-2 w-auto flex justify-end' :
         'my-2 w-auto flex'}
     >
-      {type === 'right' ? <Bid team={team} session={session}/> : ''}
+      {type === 'right' ? <Bid team={team} /> : ''}
       <div className="bg-slate-700 m-2 p-2 rounded-lg shadow-lg shadow-slate-500 flex text-white w-96">
         <div>
           <h1 className="p-4 text-center font-bold w-60">{team.name} <br/>({team.capitan})</h1>
@@ -24,7 +24,7 @@ const Team = ({ type, team, session }) => {
         </div>
       </div>
 
-      {type !== 'right' ? <Bid team={team} session={session}/> : ''}
+      {type !== 'right' ? <Bid team={team} /> : ''}
     </div>
   )
 }

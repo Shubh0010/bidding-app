@@ -1,78 +1,27 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addPlayers } from "../utils/playerSlice"
 import { addCurrentSession } from "../utils/sessionSlice"
-import { addteam, removeteam } from "../utils/teamSlice"
 import GroupList from "./GroupList"
 import Player from "./Player"
-import Shimmer from "./Shimmer"
 import axios from "axios";
 
 const Body = () => {
 
+  const player_sold = useSelector(store => store?.session?.player_sold);
+
   const dispatch = useDispatch();
 
-  const teams = useSelector((store) => store.team);
-  const players = useSelector((store) => store.player);
-  const currentSession = useSelector((store) => store.session);
+  const manageSession = async () => {
 
-  const fetchAllPlayerData = async () => {
-
-    var requestOptions = {
-      method: 'GET'
-    };
-
-    const json = await axios.get(`${import.meta.env.VITE_SERVER_URL}/players?s=pending`, requestOptions);
-
-    dispatch(addPlayers(json?.data?.data));
-  };
-
-  const fetchAllTeamsdata = async () => {
-
-    var requestOptions = {
-      method: 'GET'
-    };
-
-    const json = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teams`, requestOptions);
-
-    dispatch(removeteam());
-
-    dispatch(addteam(json?.data?.data));
-
-    await createSession();
-
-    await fetchSessionData();
-  };
-
-  const createSession = async () => {
-
-    await axios.post(`${import.meta.env.VITE_SERVER_URL}/session`);
-  }
-
-  const fetchSessionData = async () => {
-
-    const json = await axios.get(`${import.meta.env.VITE_SERVER_URL}/session`);
+    const json = await axios.post(`${import.meta.env.VITE_SERVER_URL}/session`);
 
     dispatch(addCurrentSession(json?.data?.data));
-  };
+  }
 
   useEffect(() => {
 
-    fetchAllPlayerData();
-    fetchAllTeamsdata();
-  }, []);
-
-  const allTeams = teams?.allTeams;
-  const allPlayers = players?.allPlayers;
-
-  const groupATeams = allTeams?.filter((team, index) => index < 4);
-  const groupBTeams = allTeams?.filter((team, index) => index >= 4);
-  const currentPlayer = allPlayers?.[0];
-
-  if ((!currentPlayer)) {
-
-    return <Shimmer />;
-  }
+    manageSession();
+  }, [player_sold]);
 
   return (
     <div
@@ -84,9 +33,9 @@ const Body = () => {
        * Team From Pool B
        */}
 
-        <GroupList teams={groupATeams} session={currentSession}/>
-        <Player player={currentPlayer} session={currentSession} />
-        <GroupList type={'right'} teams={groupBTeams} session={currentSession}/>
+        <GroupList />
+        <Player />
+        <GroupList type={'right'}/>
       </div>
     </div>
 

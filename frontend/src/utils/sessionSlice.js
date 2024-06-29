@@ -8,9 +8,11 @@ const sessionSlice = createSlice({
   reducers: {
     addCurrentSession: (state, action) => {
       state.current_session = action.payload;
+      state.player_sold = false;
     },
     removeCurrentSession: (state, action) => {
       state.current_session = {};
+      state.player_sold = true;
     }
   }
 });

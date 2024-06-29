@@ -1,10 +1,13 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeCurrentSession } from "../utils/sessionSlice";
 
 
-const Player = ({ }) => {
+const Player = () => {
 
-  const session = useSelector((store) => store.session?.current_session);;
+  const session = useSelector((store) => store.session?.current_session);
+
+  const dispatch = useDispatch();
 
   const handleClick = async ({ type }) => {
 
@@ -29,7 +32,9 @@ const Player = ({ }) => {
         }
       });
 
-      window.location.href = '/';
+      window.alert('PLAYER SOLD!');
+
+      dispatch(removeCurrentSession());
 
     } catch (error) {
 

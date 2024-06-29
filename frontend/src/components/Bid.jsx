@@ -11,6 +11,10 @@ const Bid = ({ team }) => {
 
   const bidValue = useRef(0);
 
+  if(session?.current_bid == 0 && bidValue?.current?.value) {
+    bidValue.current.value = '';
+  }
+
   // Use state to store and manage the team data
   const [teamData, setTeamData] = useState(null);
 
