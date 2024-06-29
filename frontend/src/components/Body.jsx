@@ -22,7 +22,7 @@ const Body = () => {
       method: 'GET'
     };
 
-    const json = await axios.get("http://localhost:3000/players?s=pending", requestOptions);
+    const json = await axios.get(`${import.meta.env.VITE_SERVER_URL}/players?s=pending`, requestOptions);
 
     dispatch(addPlayers(json?.data?.data));
   };
@@ -33,7 +33,7 @@ const Body = () => {
       method: 'GET'
     };
 
-    const json = await axios.get("http://localhost:3000/teams", requestOptions);
+    const json = await axios.get(`${import.meta.env.VITE_SERVER_URL}/teams`, requestOptions);
 
     dispatch(removeteam());
 
@@ -46,12 +46,12 @@ const Body = () => {
 
   const createSession = async () => {
 
-    await axios.post("http://localhost:3000/session");
+    await axios.post(`${import.meta.env.VITE_SERVER_URL}/session`);
   }
 
   const fetchSessionData = async () => {
 
-    const json = await axios.get("http://localhost:3000/session");
+    const json = await axios.get(`${import.meta.env.VITE_SERVER_URL}/session`);
 
     dispatch(addCurrentSession(json?.data?.data));
   };

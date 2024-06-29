@@ -22,7 +22,7 @@ const Player = ({ }) => {
         "status": type,
       };
 
-      await axios.put(`http://localhost:3000/bid/${session?._id}/complete`, body, {
+      await axios.put(`${import.meta.env.VITE_SERVER_URL}/bid/${session?._id}/complete`, body, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'

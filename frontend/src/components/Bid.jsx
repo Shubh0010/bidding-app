@@ -60,7 +60,7 @@ const Bid = ({ team }) => {
         "amount": bid_amount
       };
 
-      return axios.put(`http://localhost:3000/bid/${session_id}`, body, {
+      return axios.put(`${import.meta.env.VITE_SERVER_URL}/bid/${session_id}`, body, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
