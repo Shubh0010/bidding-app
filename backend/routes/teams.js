@@ -12,26 +12,31 @@ router.get('/', async (req, res) => {
 
   try {
 
-    const teamsData = await Team.find({});
-
-    const result = [];
-
-    for(const team of teamsData) {
-
-      const players = await Player.find({
-        team_id: team._id
-      });
-
-      result.push({
-        _id: team._id,
-        name: team.name,
-        capitan: team.capitan,
-        remaining_budget: team.remaining_budget,
-        players_left: TOTAL_PLAYERS - players.length,
-        max_next_bid: players.length != 5 ? team.remaining_budget - (5 * (TOTAL_PLAYERS - players.length - 1)) : 0
-      })
-
-    }
+    const result = await Team.aggregate([
+      {
+        $lookup: {
+          from: 'players',
+          localField: '_id',
+          foreignField: 'team_id',
+          as: 'players'
+        }
+      },
+      {
+        $project: {
+          name: 1,
+          capitan: 1,
+          remaining_budget: 1,
+          players_left: { $subtract: [TOTAL_PLAYERS, { $size: '$players' }] },
+          max_next_bid: {
+            $cond: [
+              { $ne: [{ $size: '$players' }, TOTAL_PLAYERS] },
+              { $subtract: ['$remaining_budget', { $multiply: [5, { $subtract: [{ $subtract: [TOTAL_PLAYERS, { $size: '$players' }] }, 1] }] }] },
+              0
+            ]
+          }
+        }
+      }
+    ]);
 
     sendSuccessResponse(res, result);
 
