@@ -31,7 +31,7 @@ router.put('/:session_id', async (req, res) => {
     // check if this team can bid for the player
 
     const teamDataPlayers = await Player.find({
-      teamId: teamData._id
+      team_id
     });
 
     if (teamDataPlayers.length >= MAX_PLAYERS) throw new Error('This team is already completed!');
